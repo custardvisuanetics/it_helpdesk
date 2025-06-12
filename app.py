@@ -107,7 +107,7 @@ def register():
 
         conn = get_db()
         try:
-            conn.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, hashed_password))
+            conn.execute('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', (username, hashed_password, 'technician'))
             conn.commit()
         except sqlite3.IntegrityError:
             conn.close()
@@ -115,6 +115,7 @@ def register():
         conn.close()
 
         session['user'] = username  # auto-login
+        session['role'] = 'technician'  # <-- Important!
         return redirect(url_for('index'))
     return render_template('register.html')
 
