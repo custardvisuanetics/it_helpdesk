@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head><title>IT Help Desk</title></head>
+<body>
+    <h1>All Tickets</h1>
+    <a href="{{ url_for('create_ticket') }}">Create New Ticket</a>
+    <table border="1">
+        <tr><th>ID</th><th>Title</th><th>Status</th><th>Priority</th><th>Actions</th></tr>
+        {% for ticket in tickets %}
+        <tr>
+            <td>{{ ticket.id }}</td>
+            <td>{{ ticket.title }}</td>
+            <td>{{ ticket.status }}</td>
+            <td>{{ ticket.priority }}</td>
+            <td><a href="{{ url_for('update_ticket', ticket_id=ticket.id) }}">Update</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

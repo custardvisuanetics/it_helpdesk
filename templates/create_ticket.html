@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head><title>Create Ticket</title></head>
+<body>
+    <h1>Create New Ticket</h1>
+    <form method="post">
+        <label>Title: <input type="text" name="title" required></label><br>
+        <label>Description: <textarea name="description"></textarea></label><br>
+        <label>Category: <input type="text" name="category"></label><br>
+        <label>Priority:
+            <select name="priority">
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+            </select>
+        </label><br>
+        <input type="submit" value="Create Ticket">
+    </form>
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>

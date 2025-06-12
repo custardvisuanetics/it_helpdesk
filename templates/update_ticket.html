@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head><title>Update Ticket</title></head>
+<body>
+    <h1>Update Ticket #{{ ticket.id }}</h1>
+    <form method="post">
+        <label>Status:
+            <select name="status">
+                <option {% if ticket.status == 'Open' %}selected{% endif %}>Open</option>
+                <option {% if ticket.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                <option {% if ticket.status == 'Closed' %}selected{% endif %}>Closed</option>
+            </select>
+        </label><br>
+        <input type="submit" value="Update">
+    </form>
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>
