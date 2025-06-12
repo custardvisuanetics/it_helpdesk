@@ -84,6 +84,15 @@ def update_ticket(ticket_id):
     conn.close()
     return render_template('update_ticket.html', ticket=ticket)
 
+@app.route('/delete/<int:ticket_id>', methods=['POST'])
+@login_required
+def delete_ticket(ticket_id):
+    conn = get_db()
+    conn.execute('DELETE FROM tickets WHERE id = ?', (ticket_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('index'))
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
