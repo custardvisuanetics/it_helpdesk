@@ -65,7 +65,7 @@ def create_ticket():
         category = request.form['category']
         priority = request.form['priority']
         conn = get_db()
-        conn.execute('INSERT INTO tickets (title, description, category, priority, created_by) VALUES (?, ?, ?, ?, ?)',
+        conn.execute('INSERT INTO tickets (title, description, category, priority) VALUES (?, ?, ?, ?, ?)',
                      (title, description, category, priority, g.user))
         conn.commit()
         conn.close()
