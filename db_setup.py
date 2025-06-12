@@ -22,14 +22,15 @@ c.execute('''
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
+        password TEXT NOT NULL,
+        role TEXT NOT NULL DEFAULT 'technician'
     )
 ''')
 
 # Create default admin user
 hashed_password = generate_password_hash("admin123")
 try:
-    c.execute("INSERT INTO users (username, password) VALUES (?, ?)", ("admin", hashed_password))
+    conn.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", ("admin", hashed_password, "admin"))
 except sqlite3.IntegrityError:
     pass  # user already exists
 

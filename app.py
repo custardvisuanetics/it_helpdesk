@@ -15,6 +15,7 @@ def get_db():
 @app.before_request
 def load_user():
     g.user = session.get('user')
+    g.role = session.get('role')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -26,6 +27,7 @@ def login():
         conn.close()
         if user and check_password_hash(user['password'], password):
             session['user'] = username
+            session['role'] = user['role']
             return redirect(url_for('index'))
         return "❌ Invalid credentials"
     return render_template('login.html')
@@ -87,6 +89,8 @@ def update_ticket(ticket_id):
 @app.route('/delete/<int:ticket_id>', methods=['POST'])
 @login_required
 def delete_ticket(ticket_id):
+    if g.role != 'admin':
+        return "⛔ Access denied. Only admins can delete tickets.", 403
     conn = get_db()
     conn.execute('DELETE FROM tickets WHERE id = ?', (ticket_id,))
     conn.commit()
