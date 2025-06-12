@@ -84,5 +84,26 @@ def update_ticket(ticket_id):
     conn.close()
     return render_template('update_ticket.html', ticket=ticket)
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        hashed_password = generate_password_hash(password)
+
+        conn = get_db()
+        try:
+            conn.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, hashed_password))
+            conn.commit()
+        except sqlite3.IntegrityError:
+            conn.close()
+            return "❌ Username already exists"
+        conn.close()
+
+        session['user'] = username  # auto-login
+        return redirect(url_for('index'))
+    return render_template('register.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
