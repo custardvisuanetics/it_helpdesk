@@ -173,16 +173,21 @@ def edit_profile():
     conn = get_db()
 
     if request.method == 'POST':
+        display_name = request.form['display_name'].strip()
         new_password = request.form['password']
+
+        if display_name:
+            conn.execute("UPDATE users SET display_name = ? WHERE username = ?", (display_name, g.user))
+
         if new_password.strip():
             hashed = generate_password_hash(new_password)
             conn.execute("UPDATE users SET password = ? WHERE username = ?", (hashed, g.user))
-            conn.commit()
 
+        conn.commit()
         conn.close()
         return redirect(url_for('profile', username=g.user))
 
-    user = conn.execute("SELECT username FROM users WHERE username = ?", (g.user,)).fetchone()
+    user = conn.execute("SELECT username, display_name FROM users WHERE username = ?", (g.user,)).fetchone()
     conn.close()
     return render_template("edit_profile.html", user=user)
 

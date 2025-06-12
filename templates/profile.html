@@ -2,7 +2,8 @@
 <html>
 <head><title>{{ user.username }}'s Profile</title></head>
 <body>
-    <h1>👤 Profile: {{ user.username }}</h1>
+    <h1>👤 Profile: {{ user.display_name or user.username }}</h1>
+    <p><strong>Username:</strong> {{ user.username }}</p>
     <p><strong>Role:</strong> {{ user.role }}</p>
     <p><strong>Joined:</strong> {{ user.created_at or "N/A" }}</p>
     <p><strong>Last Login:</strong> {{ user.last_login or "Never" }}</p>
