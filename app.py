@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, g
 import sqlite3
+from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'  # Change this!
+
 DB = "helpdesk.db"
 
 def get_db():
@@ -9,14 +12,48 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+@app.before_request
+def load_user():
+    g.user = session.get('user')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        conn = get_db()
+        user = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+        conn.close()
+        if user and check_password_hash(user['password'], password):
+            session['user'] = username
+            return redirect(url_for('index'))
+        return "❌ Invalid credentials"
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
+
+def login_required(f):
+    from functools import wraps
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not g.user:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
+@login_required
 def index():
     conn = get_db()
     tickets = conn.execute('SELECT * FROM tickets ORDER BY created_at DESC').fetchall()
     conn.close()
-    return render_template('index.html', tickets=tickets)
+    return render_template('index.html', tickets=tickets, user=g.user)
 
 @app.route('/create', methods=['GET', 'POST'])
+@login_required
 def create_ticket():
     if request.method == 'POST':
         title = request.form['title']
@@ -32,6 +69,7 @@ def create_ticket():
     return render_template('create_ticket.html')
 
 @app.route('/update/<int:ticket_id>', methods=['GET', 'POST'])
+@login_required
 def update_ticket(ticket_id):
     conn = get_db()
     ticket = conn.execute('SELECT * FROM tickets WHERE id = ?', (ticket_id,)).fetchone()
