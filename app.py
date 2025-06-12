@@ -24,10 +24,12 @@ def login():
         password = request.form['password']
         conn = get_db()
         user = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
-        conn.close()
         if user and check_password_hash(user['password'], password):
             session['user'] = username
             session['role'] = user['role']
+            conn.execute("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE username = ?", (username,))
+            conn.commit()
+            conn.close()
             return redirect(url_for('index'))
         return "❌ Invalid credentials"
     return render_template('login.html')
@@ -126,7 +128,7 @@ def manage_users():
         return "⛔ Access denied. Admins only.", 403
 
     conn = get_db()
-    users = conn.execute("SELECT id, username, role FROM users ORDER BY username").fetchall()
+    users = conn.execute("SELECT id, username, role, created_at, last_login FROM users ORDER BY username").fetchall()
     conn.close()
     return render_template("manage_users.html", users=users)
 
