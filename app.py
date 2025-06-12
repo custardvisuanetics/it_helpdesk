@@ -65,8 +65,8 @@ def create_ticket():
         category = request.form['category']
         priority = request.form['priority']
         conn = get_db()
-        conn.execute('INSERT INTO tickets (title, description, category, priority) VALUES (?, ?, ?, ?)',
-                     (title, description, category, priority))
+        conn.execute('INSERT INTO tickets (title, description, category, priority, created_by) VALUES (?, ?, ?, ?, ?)',
+                     (title, description, category, priority, g.user))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
@@ -144,6 +144,28 @@ def change_role(user_id):
     conn.commit()
     conn.close()
     return redirect(url_for('manage_users'))
+
+@app.route('/profile/<username>')
+@login_required
+def profile(username):
+    conn = get_db()
+    
+    user = conn.execute(
+        "SELECT username, role, created_at, last_login FROM users WHERE username = ?",
+        (username,)
+    ).fetchone()
+
+    if not user:
+        conn.close()
+        return "❌ User not found", 404
+
+    tickets = conn.execute(
+        "SELECT * FROM tickets WHERE title IS NOT NULL AND description IS NOT NULL AND category IS NOT NULL AND priority IS NOT NULL AND status IS NOT NULL AND created_at IS NOT NULL AND id IN (SELECT id FROM tickets WHERE title IS NOT NULL AND description IS NOT NULL AND category IS NOT NULL AND priority IS NOT NULL AND status IS NOT NULL AND created_at IS NOT NULL) AND (SELECT username FROM users WHERE username = ?) = ?",
+        (username, username)
+    ).fetchall()
+    
+    conn.close()
+    return render_template("profile.html", user=user, tickets=tickets)
 
 if __name__ == '__main__':
     app.run(debug=True)
