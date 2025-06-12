@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head><title>User Management</title></head>
+<body>
+    <h1>User Management</h1>
+    <p><a href="{{ url_for('index') }}">← Back to Tickets</a></p>
+    <table border="1">
+        <tr><th>Username</th><th>Role</th><th>Actions</th></tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+                {% if user.username != g.user %}
+                <form action="{{ url_for('change_role', user_id=user.id) }}" method="post" style="display:inline;">
+                    {% if user.role == 'admin' %}
+                        <input type="hidden" name="role" value="technician">
+                        <button type="submit">Demote to Technician</button>
+                    {% else %}
+                        <input type="hidden" name="role" value="admin">
+                        <button type="submit">Promote to Admin</button>
+                    {% endif %}
+                </form>
+                {% else %}
+                    (You)
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

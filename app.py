@@ -119,5 +119,29 @@ def register():
         return redirect(url_for('index'))
     return render_template('register.html')
 
+@app.route('/users')
+@login_required
+def manage_users():
+    if g.role != 'admin':
+        return "⛔ Access denied. Admins only.", 403
+
+    conn = get_db()
+    users = conn.execute("SELECT id, username, role FROM users ORDER BY username").fetchall()
+    conn.close()
+    return render_template("manage_users.html", users=users)
+
+@app.route('/change_role/<int:user_id>', methods=['POST'])
+@login_required
+def change_role(user_id):
+    if g.role != 'admin':
+        return "⛔ Access denied.", 403
+
+    new_role = request.form['role']
+    conn = get_db()
+    conn.execute("UPDATE users SET role = ? WHERE id = ?", (new_role, user_id))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('manage_users'))
+
 if __name__ == '__main__':
     app.run(debug=True)
