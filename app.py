@@ -167,5 +167,24 @@ def profile(username):
     conn.close()
     return render_template("profile.html", user=user, tickets=tickets)
 
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    conn = get_db()
+
+    if request.method == 'POST':
+        new_password = request.form['password']
+        if new_password.strip():
+            hashed = generate_password_hash(new_password)
+            conn.execute("UPDATE users SET password = ? WHERE username = ?", (hashed, g.user))
+            conn.commit()
+
+        conn.close()
+        return redirect(url_for('profile', username=g.user))
+
+    user = conn.execute("SELECT username FROM users WHERE username = ?", (g.user,)).fetchone()
+    conn.close()
+    return render_template("edit_profile.html", user=user)
+
 if __name__ == '__main__':
     app.run(debug=True)
