@@ -206,5 +206,35 @@ def edit_profile():
     conn.close()
     return render_template("edit_profile.html", user=user)
 
+@app.route('/ticket/<int:ticket_id>', methods=['GET', 'POST'])
+@login_required
+def view_ticket(ticket_id):
+    conn = get_db()
+
+    # Handle new comment submission
+    if request.method == 'POST':
+        content = request.form['content']
+        conn.execute(
+            "INSERT INTO comments (ticket_id, author, content) VALUES (?, ?, ?)",
+            (ticket_id, g.user, content)
+        )
+        conn.commit()
+
+    # Get ticket
+    ticket = conn.execute("SELECT * FROM tickets WHERE id = ?", (ticket_id,)).fetchone()
+
+    if not ticket:
+        conn.close()
+        return "❌ Ticket not found", 404
+
+    # Get comments
+    comments = conn.execute(
+        "SELECT author, content, created_at FROM comments WHERE ticket_id = ? ORDER BY created_at",
+        (ticket_id,)
+    ).fetchall()
+
+    conn.close()
+    return render_template("ticket_details.html", ticket=ticket, comments=comments)
+
 if __name__ == '__main__':
     app.run(debug=True)

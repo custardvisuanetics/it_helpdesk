@@ -14,6 +14,7 @@
             <td>{{ ticket.status }}</td>
             <td>{{ ticket.priority }}</td>
             <td>
+            <a href="{{ url_for('view_ticket', ticket_id=ticket.id) }}">View</a>
             <a href="{{ url_for('update_ticket', ticket_id=ticket.id) }}">Update</a>
             {% if g.role == 'admin' %}
             <form action="{{ url_for('delete_ticket', ticket_id=ticket.id) }}" method="post" style="display:inline;">
