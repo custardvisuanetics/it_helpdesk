@@ -17,7 +17,7 @@
                 <option value="" {% if not ticket.assigned_to %}selected{% endif %}>(Unassigned)</option>
                 {% for tech in technicians %}
                     <option value="{{ tech.username }}" {% if ticket.assigned_to == tech.username %}selected{% endif %}>
-                        {{ tech.username }}
+                        {{ tech.username }}{% if tech.username == g.user and g.role == 'admin' %} (You - Admin){% endif %}
                     </option>
                 {% endfor %}
             </select>

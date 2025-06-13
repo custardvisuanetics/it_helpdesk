@@ -89,7 +89,7 @@ def update_ticket(ticket_id):
     # Admins can choose any technician
     technicians = []
     if g.role == 'admin':
-        technicians = conn.execute("SELECT username FROM users WHERE role = 'technician'").fetchall()
+        technicians = conn.execute("SELECT username FROM users WHERE role IN ('technician', 'admin')").fetchall()
 
     if request.method == 'POST':
         new_status = request.form['status']
