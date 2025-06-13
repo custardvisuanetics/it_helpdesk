@@ -82,15 +82,34 @@ def update_ticket(ticket_id):
     conn = get_db()
     ticket = conn.execute("SELECT * FROM tickets WHERE id = ?", (ticket_id,)).fetchone()
 
-    # List of technicians for dropdown (only if you're admin)
-    technicians = conn.execute("SELECT username FROM users WHERE role = 'technician'").fetchall()
+    if not ticket:
+        conn.close()
+        return "Ticket not found", 404
+
+    # Admins can choose any technician
+    technicians = []
+    if g.role == 'admin':
+        technicians = conn.execute("SELECT username FROM users WHERE role = 'technician'").fetchall()
 
     if request.method == 'POST':
         new_status = request.form['status']
-        assigned_to = request.form['assigned_to'] if g.role == 'admin' else ticket['assigned_to']
 
-        conn.execute("UPDATE tickets SET status = ?, assigned_to = ? WHERE id = ?",
-                     (new_status, assigned_to, ticket_id))
+        if g.role == 'admin':
+            assigned_to = request.form['assigned_to']
+        elif g.role == 'technician':
+            # Self-assignment only
+            action = request.form.get('assign_self')
+            if action == 'yes':
+                assigned_to = g.user
+            else:
+                assigned_to = ticket['assigned_to']
+        else:
+            assigned_to = ticket['assigned_to']
+
+        conn.execute(
+            "UPDATE tickets SET status = ?, assigned_to = ? WHERE id = ?",
+            (new_status, assigned_to, ticket_id)
+        )
         conn.commit()
         conn.close()
         return redirect(url_for('index'))

@@ -22,6 +22,15 @@
                 {% endfor %}
             </select>
         </label><br><br>
+        {% elif g.role == 'technician' %}
+            {% if not ticket.assigned_to %}
+                <p>This ticket is currently <strong>unassigned</strong>.</p>
+                <label>
+                    <input type="checkbox" name="assign_self" value="yes"> Assign to me ({{ g.user }})
+                    </label><br><br>
+                {% else %}
+                    <p>This ticket is assigned to <strong>{{ ticket.assigned_to }}</strong>.</p>
+                {% endif %}
         {% endif %}
         <input type="submit" value="Update">
     </form>
