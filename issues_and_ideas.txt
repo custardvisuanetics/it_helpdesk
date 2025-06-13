@@ -12,6 +12,7 @@ Feature	Description
 ✅ Ticket Assignment - Assign tickets to technicians manually or auto-assign.
     ticket assignment implemented: 13/06/2025 17:00
 ✅ Ticket Comments - Users and staff can post updates or discussions on tickets.
+    ticket comments implemented: 13/06/2025 16:37
 ✅ Status Timeline - Track when ticket changes happened (opened, in progress, closed).
 📎 File Attachments - Upload and attach files/screenshots to a ticket.
 📆 Due Dates / Deadlines - Add a due date with deadline tracking.
