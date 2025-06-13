@@ -9,6 +9,7 @@
     <p><strong>Created:</strong> {{ ticket.created_at }}</p>
     <p><strong>Created by:</strong> {{ ticket.created_by }}</p>
     <p><strong>Description:</strong><br>{{ ticket.description }}</p>
+    <p><strong>Assigned to:</strong> {{ ticket.assigned_to or "Unassigned" }}</p>
 
     <h2>💬 Comments / Internal Notes</h2>
     {% if comments %}

@@ -80,17 +80,23 @@ def create_ticket():
 @login_required
 def update_ticket(ticket_id):
     conn = get_db()
-    ticket = conn.execute('SELECT * FROM tickets WHERE id = ?', (ticket_id,)).fetchone()
+    ticket = conn.execute("SELECT * FROM tickets WHERE id = ?", (ticket_id,)).fetchone()
+
+    # List of technicians for dropdown (only if you're admin)
+    technicians = conn.execute("SELECT username FROM users WHERE role = 'technician'").fetchall()
 
     if request.method == 'POST':
         new_status = request.form['status']
-        conn.execute('UPDATE tickets SET status = ? WHERE id = ?', (new_status, ticket_id))
+        assigned_to = request.form['assigned_to'] if g.role == 'admin' else ticket['assigned_to']
+
+        conn.execute("UPDATE tickets SET status = ?, assigned_to = ? WHERE id = ?",
+                     (new_status, assigned_to, ticket_id))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
 
     conn.close()
-    return render_template('update_ticket.html', ticket=ticket)
+    return render_template("update_ticket.html", ticket=ticket, technicians=technicians)
 
 @app.route('/delete/<int:ticket_id>', methods=['POST'])
 @login_required

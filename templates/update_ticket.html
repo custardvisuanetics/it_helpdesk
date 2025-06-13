@@ -11,6 +11,18 @@
                 <option {% if ticket.status == 'Closed' %}selected{% endif %}>Closed</option>
             </select>
         </label><br>
+        {% if g.role == 'admin' %}
+        <label>Assign to:
+            <select name="assigned_to">
+                <option value="" {% if not ticket.assigned_to %}selected{% endif %}>(Unassigned)</option>
+                {% for tech in technicians %}
+                    <option value="{{ tech.username }}" {% if ticket.assigned_to == tech.username %}selected{% endif %}>
+                        {{ tech.username }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label><br><br>
+        {% endif %}
         <input type="submit" value="Update">
     </form>
     <a href="{{ url_for('index') }}">Back to Home</a>
