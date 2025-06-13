@@ -64,12 +64,16 @@ def create_ticket():
         description = request.form['description']
         category = request.form['category']
         priority = request.form['priority']
+
         conn = get_db()
-        conn.execute('INSERT INTO tickets (title, description, category, priority) VALUES (?, ?, ?, ?)',
-                     (title, description, category, priority))
+        conn.execute('''
+            INSERT INTO tickets (title, description, category, priority, created_by)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (title, description, category, priority, g.user))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
+
     return render_template('create_ticket.html')
 
 @app.route('/update/<int:ticket_id>', methods=['GET', 'POST'])
