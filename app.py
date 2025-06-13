@@ -151,9 +151,10 @@ def profile(username):
     conn = get_db()
     
     user = conn.execute(
-        "SELECT username, role, created_at, last_login FROM users WHERE username = ?",
-        (username,)
+        "SELECT username, role, created_at, last_login, display_name FROM users WHERE username = ?",
+    (username,)
     ).fetchone()
+
 
     if not user:
         conn.close()
@@ -177,17 +178,27 @@ def edit_profile():
         new_password = request.form['password']
 
         if display_name:
-            conn.execute("UPDATE users SET display_name = ? WHERE username = ?", (display_name, g.user))
+            conn.execute(
+                "UPDATE users SET display_name = ? WHERE username = ?",
+                (display_name, g.user)
+            )
 
         if new_password.strip():
             hashed = generate_password_hash(new_password)
-            conn.execute("UPDATE users SET password = ? WHERE username = ?", (hashed, g.user))
+            conn.execute(
+                "UPDATE users SET password = ? WHERE username = ?",
+                (hashed, g.user)
+            )
 
         conn.commit()
         conn.close()
         return redirect(url_for('profile', username=g.user))
 
-    user = conn.execute("SELECT username, display_name FROM users WHERE username = ?", (g.user,)).fetchone()
+    # Make sure this query includes display_name
+    user = conn.execute(
+        "SELECT username, display_name FROM users WHERE username = ?",
+        (g.user,)
+    ).fetchone()
     conn.close()
     return render_template("edit_profile.html", user=user)
 
