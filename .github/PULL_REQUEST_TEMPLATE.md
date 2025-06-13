@@ -37,13 +37,3 @@ Related to #<issue-number>
 
 <!-- Paste screenshots or GIFs here to show UI changes -->
 _N/A_
-
----
-
-## ✅ Checklist
-
-- [ ] Code compiles and runs
-- [ ] Follows commit message guidelines
-- [ ] Linked to an issue
-- [ ] No commented or debug code
-- [ ] Tests added or updated (if applicable)
