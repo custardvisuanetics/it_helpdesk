@@ -1,6 +1,6 @@
 change display name doesn't do anything - fixed 13/06/2025 
 last login never? for technician? - 13/06/2025 15:19 - seemed to have fixed itself
-tickets created by are the same across all users (test & admin)
+tickets created by are the same across all users (test & admin) - 13/06/2025 15:25 - fixed
 
 ideas:
 13/06/2025 12:44 - view ticket details

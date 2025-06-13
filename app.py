@@ -165,8 +165,8 @@ def profile(username):
         return "❌ User not found", 404
 
     tickets = conn.execute(
-        "SELECT * FROM tickets WHERE title IS NOT NULL AND description IS NOT NULL AND category IS NOT NULL AND priority IS NOT NULL AND status IS NOT NULL AND created_at IS NOT NULL AND id IN (SELECT id FROM tickets WHERE title IS NOT NULL AND description IS NOT NULL AND category IS NOT NULL AND priority IS NOT NULL AND status IS NOT NULL AND created_at IS NOT NULL) AND (SELECT username FROM users WHERE username = ?) = ?",
-        (username, username)
+        "SELECT * FROM tickets WHERE created_by = ? ORDER BY created_at DESC",
+        (username,)
     ).fetchall()
     
     conn.close()
