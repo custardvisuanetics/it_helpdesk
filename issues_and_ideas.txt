@@ -5,3 +5,46 @@ tickets created by are the same across all users (test & admin) - 13/06/2025 15:
 ideas:
 13/06/2025 12:44 - view ticket details
     13/06/2025 15:32 - ticket details view / comments & notes
+
+13/06/2025 16:39:
+🎫 Ticket Management Enhancements
+Feature	Description
+✅ Ticket Assignment - Assign tickets to technicians manually or auto-assign.
+✅ Ticket Comments - Users and staff can post updates or discussions on tickets.
+✅ Status Timeline - Track when ticket changes happened (opened, in progress, closed).
+📎 File Attachments - Upload and attach files/screenshots to a ticket.
+📆 Due Dates / Deadlines - Add a due date with deadline tracking.
+📤 Email Notifications - Send emails on ticket creation, assignment, status change.
+🕒 SLA Monitoring - Define service levels (e.g., respond in 24h, resolve in 72h).
+📊 Tags / Labels - Allow tickets to have multiple tags for filtering (e.g., "Network", "Urgent").
+
+👥 User Features
+Feature	Description
+✅ Display Names / Avatars - Already started! Add profile images next.
+✅ Edit Profile - Already done! Extend with email or contact info.
+🔑 Password Reset - Add “Forgot Password?” support via email or admin action.
+🧑‍🤝‍🧑 User Groups / Departments - Group users for easier assignment/reporting.
+🪪 Permissions by Role - Add fine-grained control (e.g., only admins can close tickets).
+
+📊 Admin Features & Reporting
+Feature	Description
+📋 Admin Dashboard - Graphs/stats like open vs closed tickets, per-user workload, etc.
+🧾 Export Tickets (CSV/XLSX) - Export filtered tickets to Excel or CSV.
+📜 Audit Log - Track who updated what and when (user, ticket, field).
+🗑️ Soft Deletes / Recycle Bin - Allow ticket recovery or track deleted items.
+📌 Ticket Priority Matrix - Display urgent/important tickets visually.
+
+🌐 UI & UX Improvements
+Feature	Description
+🧭 Sidebar / Navigation Bar - Easier navigation between sections.
+🎨 Theming / Dark Mode - Toggle between light/dark modes.
+🔍 Ticket Search & Filters - Search by title, status, priority, creator.
+📱 Responsive Design - Mobile-friendly interface with Bootstrap or Tailwind.
+🛑 404 / 403 Pages - Friendly custom error pages for invalid/unauthorized access.
+
+🧪 Technical Upgrades
+Feature	Description
+🗃️ Switch to SQLAlchemy ORM - More Pythonic DB interaction.
+⚙️ Blueprints for Code Modularization - Split your app into modules: auth, tickets, admin.
+🧪 Testing with Pytest - Add automated tests to avoid regressions.
+🧱 Dockerize the App - Package everything for easy deployment.
