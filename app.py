@@ -128,6 +128,17 @@ def delete_ticket(ticket_id):
     conn.close()
     return redirect(url_for('index'))
 
+@app.route('/my_tickets')
+@login_required
+def my_tickets():
+    conn = get_db()
+    tickets = conn.execute(
+        "SELECT * FROM tickets WHERE assigned_to = ? ORDER BY created_at DESC",
+        (g.user,)
+    ).fetchall()
+    conn.close()
+    return render_template("my_tickets.html", tickets=tickets)
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
