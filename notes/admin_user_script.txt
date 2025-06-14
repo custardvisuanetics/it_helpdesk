@@ -1,0 +1,8 @@
+RUN IN SHELL: (flash shell)
+
+from app.models import User
+from werkzeug.security import generate_password_hash
+
+new_user = User(username="admin", display_name="Admin", password=generate_password_hash("admin123"), role="admin")
+db.session.add(new_user)
+db.session.commit()
